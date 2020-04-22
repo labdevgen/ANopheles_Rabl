@@ -64,7 +64,6 @@ plt.axhline(y=0, ls=":")
 plt.vlines(x=(np.arange(1, len(hic_files)))*2+0.5, ymin=-3, ymax=3)
 plt.boxplot(data,labels=labels,showfliers=False)
 plt.xticks(rotation=45, fontsize = 12)
-plt.xticks(fontsize = 12)
 plt.ylabel("Log(normed contacts count)", fontsize = 14)
 for ind,val in enumerate(["An. albimanus","An. atroparvus",
                           "An. stephensi","An. coluzzii",
@@ -72,4 +71,4 @@ for ind,val in enumerate(["An. albimanus","An. atroparvus",
     plt.annotate(val,(ind*2+1.5,-2.5), style="italic", size=14,
                  horizontalalignment="center",
                  verticalalignment="top")
-plt.savefig("Fig_rabl.png",dpi=600)
+plt.savefig("Fig_rabl.png",dpi=150)
