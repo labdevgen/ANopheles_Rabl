@@ -12,7 +12,7 @@ hic_files = ["https://genedev.bionet.nsc.ru/site/hic_out/Anopheles/hic/AalbS2/Aa
             "https://genedev.bionet.nsc.ru/site/hic_out/Anopheles/hic/AmerR4/AmerR4_V3A_30.hic"]
 
 resolution = 50000
-juicer_path = "../Anopheles_Ps/Juicer/juicer_tools_1.19.02.jar"
+juicer_path = os.path.abspath("../Anopheles_Ps/Juicer/juicer_tools_1.19.02.jar")
 wings = [("2L","2R"),("3L","3R")]
 
 def dump_contacts(hic_file, resolution, chr1, chr2, juicer_path):
@@ -26,7 +26,11 @@ def dump_contacts(hic_file, resolution, chr1, chr2, juicer_path):
 
 data = []
 labels = []
+plt.gcf().set_size_inches(14,10)
+
 for hic_file in hic_files:
+    curr_rabl = []
+    curr_others = []
     for ind,(chr1,chr2) in enumerate(wings):
         contacts = dump_contacts(hic_file, resolution, chr1, chr2, juicer_path)
         if not (chr1.endswith("L") and chr2.endswith("R")):
@@ -47,12 +51,21 @@ for hic_file in hic_files:
 
         rabl = contacts.query("rabl_dist <= 3*@resolution")["count"].values
         non_rabl = contacts.query("rabl_dist >= 6*@resolution")["count"].values
-        data += [rabl,non_rabl]
-        labels += ["Rabl "+chr1+"/"+chr2,"Other "+chr1+"/"+chr2]
+        curr_rabl += rabl.tolist()
+        curr_others += non_rabl.tolist()
+    data += [curr_rabl,curr_others]
+    labels += ["Rabl","Other"]
 
 plt.axhline(y=0, ls=":")
-plt.vlines(x=(np.arange(1, len(hic_files)))*4+0.5, ymin=-3, ymax=3)
+plt.vlines(x=(np.arange(1, len(hic_files)))*2+0.5, ymin=-3, ymax=3)
 plt.boxplot(data,labels=labels,showfliers=False)
-plt.xticks(rotation=45)
-plt.ylabel("Log(observed/expected)")
-plt.show()
+plt.xticks(rotation=45, fontsize = 12)
+plt.xticks(fontsize = 12)
+plt.ylabel("Log(normed contacts count)", fontsize = 14)
+for ind,val in enumerate(["An. albimanus","An. atroparvus",
+                          "An. stephensi","An. coluzzii",
+                          "An. merus\n(embryo)","An. merus\n(adult)"]):
+    plt.annotate(val,(ind*2+1.5,-2.5), style="italic", size=14,
+                 horizontalalignment="center",
+                 verticalalignment="top")
+plt.savefig("Fig_rabl.png",dpi=600)
