@@ -68,7 +68,8 @@ plt.ylabel("Log(normed contacts count)", fontsize = 14)
 for ind,val in enumerate(["An. albimanus","An. atroparvus",
                           "An. stephensi","An. coluzzii",
                           "An. merus\n(embryo)","An. merus\n(adult)"]):
-    plt.annotate(val,(ind*2+1.5,-2.5), style="italic", size=14,
+    plt.annotate(val+"\n"+str(len(data[ind*2]))+" "+str(len(data[ind*2+1])),
+                 (ind*2+1.5,-2.5), style="italic", size=14,
                  horizontalalignment="center",
                  verticalalignment="top")
 plt.savefig("Fig_rabl.png",dpi=150)
